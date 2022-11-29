@@ -178,8 +178,14 @@ function checkForCollisions() {
 
   //check for game over
   if (ballCurrentPosition[1] <= 0) {
+    ballCurrentPosition[0] = 270;
+    ballCurrentPosition[1] = 80;
+    drawBall();
+
     if (hearts.length > 0) {
       console.log(`pozostały Ci ${hearts.length - 1} życia`);
+      startBtn.disabled = false;
+      startBtn.textContent = "Resume";
     }
     const allHearts = Array.from(document.querySelectorAll(".heart"));
     allHearts[0].classList.remove("heart");
@@ -187,8 +193,14 @@ function checkForCollisions() {
     console.log(hearts);
 
     clearInterval(timerId);
-    scoreDisplay.innerHTML = "PRZEGRANKO";
-    document.removeEventListener("keydown", moveUser);
+    if (hearts.length <= 0) {
+      scoreDisplay.innerHTML = "PRZEGRANKO";
+      startBtn.textContent = "TRY AGAIN";
+      startBtn.addEventListener("click", () => {
+        window.location.reload();
+      });
+      document.removeEventListener("keydown", moveUser);
+    }
   }
 }
 
