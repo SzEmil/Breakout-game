@@ -3,6 +3,11 @@
 const grid = document.querySelector(".grid");
 const scoreDisplay = document.querySelector("#score");
 const startBtn = document.querySelector("#startBtn");
+const easyBtn = document.querySelector("#easy");
+const mediumBtn = document.querySelector("#medium");
+const hardBtn = document.querySelector("#hard");
+const buttons = document.querySelector(".buttons");
+
 const blockWidth = 100;
 const blokcHeight = 20;
 const boardWidth = 560;
@@ -10,6 +15,8 @@ const ballDiamater = 20;
 const boardHeight = 300;
 
 let score = 0;
+
+let lvl = 30;
 
 let xDirection = -2;
 let yDirection = 2;
@@ -194,7 +201,24 @@ function changeDirection() {
 }
 
 function startGame() {
-  timerId = setInterval(moveBall, 30);
+  timerId = setInterval(moveBall, lvl);
+  console.log(lvl);
+  startBtn.disabled = true;
 }
 
 startBtn.addEventListener("click", startGame);
+hardBtn.addEventListener("click", () => {
+  lvl = 5;
+  easyBtn.disabled = true;
+  mediumBtn.disabled = true;
+});
+mediumBtn.addEventListener("click", () => {
+  lvl = 10;
+  hardBtn.disabled = true;
+  mediumBtn.disabled = true;
+});
+easyBtn.addEventListener("click", () => {
+  lvl = 20;
+  hardBtn.disabled = true;
+  mediumBtn.disabled = true;
+});
