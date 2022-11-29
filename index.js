@@ -7,6 +7,9 @@ const easyBtn = document.querySelector("#easy");
 const mediumBtn = document.querySelector("#medium");
 const hardBtn = document.querySelector("#hard");
 const gui = document.querySelector(".gui");
+const scoreboard = document.querySelector(".scoreboard");
+
+let approach = 1;
 
 const blockWidth = 100;
 const blokcHeight = 20;
@@ -31,6 +34,7 @@ let ballCurrentPosition = ballStart;
 let hearts = [];
 
 startBtn.disabled = true;
+
 //creating block out from class
 class Block {
   constructor(xAxis, yAxis) {
@@ -41,25 +45,7 @@ class Block {
   }
 }
 //table of blocks
-const blocks = [
-  new Block(10, 270),
-  new Block(120, 270),
-  new Block(230, 270),
-  new Block(340, 270),
-  new Block(450, 270),
-
-  new Block(10, 240),
-  new Block(120, 240),
-  new Block(230, 240),
-  new Block(340, 240),
-  new Block(450, 240),
-
-  new Block(10, 210),
-  new Block(120, 210),
-  new Block(230, 210),
-  new Block(340, 210),
-  new Block(450, 210),
-];
+let blocks = [];
 //random color
 function getRandomHexColor() {
   return `#${Math.floor(Math.random() * 16777215)
@@ -79,8 +65,14 @@ function addBlocks() {
     console.log("utworzono obiekt");
   }
 }
-addBlocks();
 
+function removeBlocks() {
+  const allDivsBlocks = Array.from(grid.querySelectorAll("div .block"));
+  allDivsBlocks.forEach((element, index) => {
+    element.remove();
+  });
+  blocks.innerHTML = "";
+}
 //user
 const user = document.createElement("div");
 user.classList.add("user");
@@ -196,8 +188,20 @@ function checkForCollisions() {
     if (hearts.length <= 0) {
       scoreDisplay.innerHTML = "PRZEGRANKO";
       startBtn.textContent = "TRY AGAIN";
+
+      try {
+        const actualscore = localStorage.getItem(LocalStorageKey);
+        const parsedScore = JSON.parse(actualscore);
+        parsedScore.push(score);
+        localStorage.setItem(LocalStorageKey, JSON.stringify(parsedScore));
+      } catch (error) {
+        console.error(error);
+      }
+
       startBtn.addEventListener("click", () => {
-        window.location.reload();
+        // removeBlocks();
+        // addBlocks();
+        // startBtn.textContent = "START GAME";
       });
       document.removeEventListener("keydown", moveUser);
     }
@@ -224,6 +228,26 @@ function changeDirection() {
 }
 
 function startGame() {
+  blocks = [
+    new Block(10, 270),
+    new Block(120, 270),
+    new Block(230, 270),
+    new Block(340, 270),
+    new Block(450, 270),
+
+    new Block(10, 240),
+    new Block(120, 240),
+    new Block(230, 240),
+    new Block(340, 240),
+    new Block(450, 240),
+
+    new Block(10, 210),
+    new Block(120, 210),
+    new Block(230, 210),
+    new Block(340, 210),
+    new Block(450, 210),
+  ];
+  addBlocks();
   timerId = setInterval(moveBall, lvl);
   console.log(lvl);
   startBtn.disabled = true;
@@ -265,3 +289,44 @@ function generateLives(numberOfLives) {
     gui.appendChild(heart);
   }
 }
+
+//scoreboard local storage
+const LocalStorageKey = "playerScore";
+
+const savescore = () => {
+  let scoreStorage;
+  localStorage.setItem(LocalStorageKey, JSON.stringify(scoreStorage));
+};
+
+const getScore = () => {
+  try {
+    const activscore = localStorage.getItem(LocalStorageKey);
+    const parsedScore = JSON.parse(activscore);
+
+    parsedScore.forEach((element, index) => {
+      const scoreLine = document.createElement("a");
+      scoreLine.textContent = `Wynik próba ${approach} : ${parsedScore[index]}`;
+      scoreboard.appendChild(scoreLine);
+      approach++;
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//creating scoreboard from local storage
+//  savescore();
+// getScore();
+
+//seting storage
+
+//RESET GAME
+const resetGame = () => {
+  removeBlocks();
+  easyBtn.disabled = false;
+  hardBtn.disabled = false;
+  mediumBtn.disabled = false;
+  startBtn.disabled = false;
+};
+const random = document.querySelector("#randomix");
+random.addEventListener("click", resetGame);
