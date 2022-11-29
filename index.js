@@ -6,7 +6,7 @@ const startBtn = document.querySelector("#startBtn");
 const easyBtn = document.querySelector("#easy");
 const mediumBtn = document.querySelector("#medium");
 const hardBtn = document.querySelector("#hard");
-const buttons = document.querySelector(".buttons");
+const gui = document.querySelector(".gui");
 
 const blockWidth = 100;
 const blokcHeight = 20;
@@ -28,6 +28,9 @@ let currentPosition = userStart;
 const ballStart = [270, 80];
 let ballCurrentPosition = ballStart;
 
+let hearts = [];
+
+startBtn.disabled = true;
 //creating block out from class
 class Block {
   constructor(xAxis, yAxis) {
@@ -175,6 +178,14 @@ function checkForCollisions() {
 
   //check for game over
   if (ballCurrentPosition[1] <= 0) {
+    if (hearts.length > 0) {
+      console.log(`pozostały Ci ${hearts.length - 1} życia`);
+    }
+    const allHearts = Array.from(document.querySelectorAll(".heart"));
+    allHearts[0].classList.remove("heart");
+    hearts.pop();
+    console.log(hearts);
+
     clearInterval(timerId);
     scoreDisplay.innerHTML = "PRZEGRANKO";
     document.removeEventListener("keydown", moveUser);
@@ -204,21 +215,41 @@ function startGame() {
   timerId = setInterval(moveBall, lvl);
   console.log(lvl);
   startBtn.disabled = true;
+  console.log(hearts);
 }
 
 startBtn.addEventListener("click", startGame);
 hardBtn.addEventListener("click", () => {
   lvl = 5;
+  generateLives(1);
   easyBtn.disabled = true;
   mediumBtn.disabled = true;
+  startBtn.disabled = false;
+  hardBtn.disabled = true;
 });
 mediumBtn.addEventListener("click", () => {
   lvl = 10;
+  generateLives(2);
   hardBtn.disabled = true;
   mediumBtn.disabled = true;
+  easyBtn.disabled = true;
+  startBtn.disabled = false;
 });
 easyBtn.addEventListener("click", () => {
   lvl = 20;
+  generateLives(3);
+  easyBtn.disabled = true;
   hardBtn.disabled = true;
   mediumBtn.disabled = true;
+  startBtn.disabled = false;
 });
+
+//lives generated
+function generateLives(numberOfLives) {
+  for (let i = 0; i < numberOfLives; i++) {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    hearts.push(heart);
+    gui.appendChild(heart);
+  }
+}

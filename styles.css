@@ -1,3 +1,7 @@
+.gui {
+  display: flex;
+}
+
 .grid {
   position: absolute;
   width: 560px;
@@ -5,7 +9,6 @@
   border: solid black 1px;
   margin-top: 80px;
 }
-
 .block {
   position: absolute;
   width: 100px;
@@ -28,4 +31,12 @@
   border-radius: 10px;
   background-color: red;
   border: black 1px solid;
+}
+
+.heart {
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  margin-right: 10px;
+  margin-left: 10px;
 }
