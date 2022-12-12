@@ -8,8 +8,7 @@ const mediumBtn = document.querySelector("#medium");
 const hardBtn = document.querySelector("#hard");
 const gui = document.querySelector(".gui");
 const scoreboard = document.querySelector(".scoreboard");
-
-let approach = 1;
+const random = document.querySelector("#randomix");
 
 const blockWidth = 100;
 const blokcHeight = 20;
@@ -34,7 +33,7 @@ let ballCurrentPosition = ballStart;
 let hearts = [];
 
 startBtn.disabled = true;
-
+random.disabled = true;
 //creating block out from class
 class Block {
   constructor(xAxis, yAxis) {
@@ -188,21 +187,19 @@ function checkForCollisions() {
     if (hearts.length <= 0) {
       scoreDisplay.innerHTML = "PRZEGRANKO";
       startBtn.textContent = "TRY AGAIN";
+      startBtn.disabled = true;
+      random.disabled = false;
 
       try {
         const actualscore = localStorage.getItem(LocalStorageKey);
         const parsedScore = JSON.parse(actualscore);
         parsedScore.push(score);
         localStorage.setItem(LocalStorageKey, JSON.stringify(parsedScore));
+        getScore();
       } catch (error) {
         console.error(error);
       }
 
-      startBtn.addEventListener("click", () => {
-        // removeBlocks();
-        // addBlocks();
-        // startBtn.textContent = "START GAME";
-      });
       document.removeEventListener("keydown", moveUser);
     }
   }
@@ -294,17 +291,20 @@ function generateLives(numberOfLives) {
 const LocalStorageKey = "playerScore";
 
 const savescore = () => {
-  let scoreStorage;
+  let scoreStorage = [];
   localStorage.setItem(LocalStorageKey, JSON.stringify(scoreStorage));
 };
 
 const getScore = () => {
   try {
+    scoreboard.innerHTML = "";
+    let approach = 1;
     const activscore = localStorage.getItem(LocalStorageKey);
     const parsedScore = JSON.parse(activscore);
 
     parsedScore.forEach((element, index) => {
       const scoreLine = document.createElement("a");
+      scoreLine.style.color = "white";
       scoreLine.textContent = `Wynik próba ${approach} : ${parsedScore[index]}`;
       scoreboard.appendChild(scoreLine);
       approach++;
@@ -315,7 +315,7 @@ const getScore = () => {
 };
 
 //creating scoreboard from local storage
-//  savescore();
+savescore();
 // getScore();
 
 //seting storage
@@ -326,7 +326,9 @@ const resetGame = () => {
   easyBtn.disabled = false;
   hardBtn.disabled = false;
   mediumBtn.disabled = false;
-  startBtn.disabled = false;
+  startBtn.disabled = true;
+  document.addEventListener("keydown", moveUser);
+  random.disabled = true;
 };
-const random = document.querySelector("#randomix");
+
 random.addEventListener("click", resetGame);

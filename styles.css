@@ -1,3 +1,12 @@
+* {
+  margin: 0;
+}
+body {
+  height: 1000px;
+  background-image: url(https://img.freepik.com/premium-vector/space-background-with-stars-vector-illustration_97886-319.jpg?w=1380);
+  background-size: cover;
+}
+
 .gui {
   display: flex;
 }
@@ -7,7 +16,12 @@
   width: 560px;
   height: 300px;
   border: solid black 1px;
-  margin-top: 120px;
+  border-radius: 5px;
+  top: 25%;
+  background-color: white;
+  left: 50%;
+
+  transform: translateX(-50%);
 }
 .block {
   position: absolute;
@@ -22,6 +36,7 @@
   height: 20px;
   border: solid black 1px;
   background-color: purple;
+  border-radius: 5px;
 }
 
 .ball {
@@ -49,4 +64,10 @@
 .scoreboard {
   display: flex;
   flex-direction: column;
+  padding-top: 20px;
+}
+#score {
+  color: white;
+}
+.grid-wrapper {
 }
