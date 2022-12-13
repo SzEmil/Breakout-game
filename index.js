@@ -9,6 +9,7 @@ const hardBtn = document.querySelector("#hard");
 const gui = document.querySelector(".gui");
 const scoreboard = document.querySelector(".scoreboard");
 const random = document.querySelector("#randomix");
+const information = document.querySelector(".information");
 
 const blockWidth = 100;
 const blokcHeight = 20;
@@ -23,6 +24,7 @@ let lvl = 30;
 let xDirection = -2;
 let yDirection = 2;
 let timerId = null;
+let resumeGameTimer = null;
 
 const userStart = [230, 10];
 let currentPosition = userStart;
@@ -144,6 +146,12 @@ function checkForCollisions() {
         scoreDisplay.innerHTML = "WYGRANKO";
         clearInterval(timerId);
         document.removeEventListener("keydown", moveUser);
+
+        const actualscore = localStorage.getItem(LocalStorageKey);
+        const parsedScore = JSON.parse(actualscore);
+        parsedScore.push(score);
+        localStorage.setItem(LocalStorageKey, JSON.stringify(parsedScore));
+        getScore();
       }
     }
   }
@@ -178,12 +186,28 @@ function checkForCollisions() {
       startBtn.disabled = false;
       startBtn.textContent = "Resume";
     }
+
     const allHearts = Array.from(document.querySelectorAll(".heart"));
     allHearts[0].classList.remove("heart");
     hearts.pop();
     console.log(hearts);
 
     clearInterval(timerId);
+
+    let n = 3;
+    information.textContent = " ";
+    if (hearts.length > 0) {
+      resumeGameTimer = setInterval(() => {
+        if (n < 0 && hearts.length > 0) {
+          timerId = setInterval(moveBall, lvl);
+          startBtn.disabled = true;
+          clearInterval(resumeGameTimer);
+          return;
+        }
+        information.textContent = `Do wznowienia gry pozostało: ${n}`;
+        n--;
+      }, 1000);
+    }
     if (hearts.length <= 0) {
       scoreDisplay.innerHTML = "PRZEGRANKO";
       startBtn.textContent = "TRY AGAIN";
@@ -329,6 +353,8 @@ const resetGame = () => {
   startBtn.disabled = true;
   document.addEventListener("keydown", moveUser);
   random.disabled = true;
+  score = 0;
+  scoreDisplay.textContent = 0;
 };
 
 random.addEventListener("click", resetGame);
