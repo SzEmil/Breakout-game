@@ -147,6 +147,15 @@ function checkForCollisions() {
         clearInterval(timerId);
         document.removeEventListener('keydown', moveUser);
 
+        startBtn.disabled = true;
+        random.disabled = false;
+        easyBtn.style.backgroundColor = 'white';
+        easyBtn.style.color = 'black';
+        mediumBtn.style.backgroundColor = 'white';
+        mediumBtn.style.color = 'black';
+        hardBtn.style.backgroundColor = 'white';
+        hardBtn.style.color = 'black';
+
         const actualscore = localStorage.getItem(LocalStorageKey);
         const parsedScore = JSON.parse(actualscore);
         parsedScore.push(score);
